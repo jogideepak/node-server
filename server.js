@@ -35,8 +35,15 @@ app.use(function (req, res, next) {
 });
 
 var currentLocation = { longitude: '18.998775', latitude: '72.8160861' };
+var currentLocationMap = {
+  0: { longitude: '18.998775', latitude: '72.8160861' },
+};
 app.get('/loc', (req, res) => {
-  res.send(currentLocation);
+  if (req.query.id || req.query.id == 0 || !currentLocationMap[req.query.id]) {
+    res.send(currentLocation);
+  } else {
+    res.send(currentLocationMap[req.query.id]);
+  }
 });
 
 app.post('/loc', (req, res) => {
@@ -48,9 +55,16 @@ app.post('/loc', (req, res) => {
 });
 app.get('/locget', (req, res) => {
   console.log(req.query);
-  if (req.query.longitude) {
+  if (req.query.longitude && !req.query.id && req.query.id != 0) {
     currentLocation.longitude = req.query.longitude;
     currentLocation.latitude = req.query.latitude;
+  } else if (req.query.longitude) {
+    if (!currentLocationMap[req.query.id]) {
+      currentLocationMap[req.query.id] = {};
+      currentLocationMap[req.query.id].id = req.query.id;
+    }
+    currentLocationMap[req.query.id].longitude = req.query.longitude;
+    currentLocationMap[req.query.id].latitude = req.query.latitude;
   }
   res.send('success');
 });
