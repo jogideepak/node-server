@@ -39,7 +39,7 @@ var currentLocationMap = {
   1: { longitude: '18.998775', latitude: '72.8160861' },
 };
 app.get('/loc', (req, res) => {
-  if (req.query.id || req.query.id == 0 || !currentLocationMap[req.query.id]) {
+  if (!req.query.id || req.query.id == 0 || !currentLocationMap[req.query.id]) {
     res.send(currentLocation);
   } else {
     res.send(currentLocationMap[req.query.id]);
